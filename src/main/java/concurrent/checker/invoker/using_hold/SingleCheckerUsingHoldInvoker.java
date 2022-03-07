@@ -30,6 +30,8 @@ public class SingleCheckerUsingHoldInvoker implements ConcurrentCheckerInvoker {
                 Task task = new Task(obj, commonObj, target);
                 Pair<Pieces, Boolean> call = task.call();
                 results.add(call);
+                if (!call.getValue())
+                    break;
             }
         } catch (Exception e) {
             throw new FinderExecuteException(e);
