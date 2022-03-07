@@ -66,7 +66,7 @@ public class CoverEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         int height = 24;
 
         ColorConverter colorConverter = new ColorConverter();
@@ -285,6 +285,7 @@ public class CoverEntryPoint implements EntryPoint {
         } catch (IOException e) {
             throw new FinderExecuteException("Failed to output file", e);
         }
+        return 0;
     }
 
     private Cover createCover() {

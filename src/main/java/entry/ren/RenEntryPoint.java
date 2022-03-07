@@ -82,7 +82,7 @@ public class RenEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         output("# Setup Field");
 
         // Setup field
@@ -189,6 +189,7 @@ public class RenEntryPoint implements EntryPoint {
                 throw new FinderExecuteException("Failed to output file", e);
             }
         }
+        return 0;
     }
 
     private static final String FILE_EXTENSION = ".html";

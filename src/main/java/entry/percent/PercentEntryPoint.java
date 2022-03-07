@@ -57,8 +57,8 @@ public class PercentEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
-        output("# Setup Field");
+    public int run() throws FinderException {
+        // output("# Setup Field");
 
         // Setup field
         Field field = settings.getField();
@@ -69,54 +69,54 @@ public class PercentEntryPoint implements EntryPoint {
         Verify.maxClearLineUnder24(maxClearLine);
 
         // Output field
-        output(FieldView.toString(field, maxClearLine));
+        // output(FieldView.toString(field, maxClearLine));
 
         // Setup max depth
         int maxDepth = Verify.maxDepth(field, maxClearLine);  // パフェに必要なミノ数
 
-        output();
+        // output();
 
         // ========================================
 
         // Output user-defined
-        output("# Initialize / User-defined");
-        output("Max clear lines: " + maxClearLine);
-        output("Using hold: " + (settings.isUsingHold() ? "use" : "avoid"));
-        output("Drop: " + settings.getDropType().name().toLowerCase());
-        output("Searching patterns:");
+        // output("# Initialize / User-defined");
+        // output("Max clear lines: " + maxClearLine);
+        // output("Using hold: " + (settings.isUsingHold() ? "use" : "avoid"));
+        // output("Drop: " + settings.getDropType().name().toLowerCase());
+        // output("Searching patterns:");
 
         // Setup patterns
         List<String> patterns = settings.getPatterns();
         PatternGenerator generator = Verify.patterns(patterns, maxDepth);
 
         // Output patterns
-        for (String pattern : patterns.subList(0, Math.min(5, patterns.size())))
-            output("  " + pattern);
+        // for (String pattern : patterns.subList(0, Math.min(5, patterns.size())))
+        //     output("  " + pattern);
 
         if (5 < patterns.size())
             output(String.format("  ... and more, total %s lines", patterns.size()));
 
-        output();
+        // output();
 
         // ========================================
 
         // Setup core
-        output("# Initialize / System");
+        // output("# Initialize / System");
 
         ExecutorService executorService = createExecutorService();
 
-        output("Version = " + FinderConstant.VERSION);
-        output("Necessary Pieces = " + maxDepth);
+        // output("Version = " + FinderConstant.VERSION);
+        // output("Necessary Pieces = " + maxDepth);
 
-        output();
+        // output();
 
         // ========================================
 
         // Holdができるときは必要なミノ分（maxDepth + 1）だけを取り出す。maxDepth + 1だけないときはブロックの個数をそのまま指定
-        output("# Enumerate pieces");
+        // output("# Enumerate pieces");
         int piecesDepth = generator.getDepth();
         int popCount = settings.isUsingHold() && maxDepth < piecesDepth ? maxDepth + 1 : maxDepth;
-        output("Piece pop count = " + popCount);
+        // output("Piece pop count = " + popCount);
         if (popCount < piecesDepth) {
             output();
             output("####################################################################");
@@ -131,17 +131,17 @@ public class PercentEntryPoint implements EntryPoint {
         NormalEnumeratePieces normalEnumeratePieces = new NormalEnumeratePieces(generator, maxDepth, settings.isUsingHold());
         Set<LongPieces> searchingPieces = normalEnumeratePieces.enumerate();
 
-        output("Searching pattern size (duplicate) = " + normalEnumeratePieces.getCounter());
-        output("Searching pattern size ( no dup. ) = " + searchingPieces.size());
+        // output("Searching pattern size (duplicate) = " + normalEnumeratePieces.getCounter());
+        // output("Searching pattern size ( no dup. ) = " + searchingPieces.size());
 
-        output();
+        // output();
 
         // ========================================
 
         // 探索を行う
-        output("# Search");
-        output("  -> Stopwatch start");
-        Stopwatch stopwatch = Stopwatch.createStartedStopwatch();
+        // output("# Search");
+        // output("  -> Stopwatch start");
+        // Stopwatch stopwatch = Stopwatch.createStartedStopwatch();
 
         ThreadLocal<? extends Candidate<Action>> candidateThreadLocal = createCandidateThreadLocal(settings.getDropType(), maxClearLine);
         ThreadLocal<? extends Reachable> reachableThreadLocal = createReachableThreadLocal(settings.getDropType(), maxClearLine);
@@ -152,75 +152,76 @@ public class PercentEntryPoint implements EntryPoint {
         AnalyzeTree tree = percentCore.getResultTree();
         List<Pair<Pieces, Boolean>> resultPairs = percentCore.getResultPairs();
 
-        stopwatch.stop();
-        output("  -> Stopwatch stop : " + stopwatch.toMessage(TimeUnit.MILLISECONDS));
+        // stopwatch.stop();
+        // output("  -> Stopwatch stop : " + stopwatch.toMessage(TimeUnit.MILLISECONDS));
 
-        output();
+        // output();
 
         // ========================================
 
         // Output tree
-        output("# Output");
-        output(tree.show());
+        // output("# Output");
+        // output(tree.show());
+        return tree.rootElement.successCounter;
 
-        output();
+        // output();
 
         // Output failed patterns
-        int treeDepth = settings.getTreeDepth();
-        if (piecesDepth < treeDepth)
-            treeDepth = piecesDepth;
+        // int treeDepth = settings.getTreeDepth();
+        // if (piecesDepth < treeDepth)
+        //     treeDepth = piecesDepth;
 
-        output(String.format("Success pattern tree [Head %d pieces]:", treeDepth));
-        output(tree.tree(treeDepth));
+        // output(String.format("Success pattern tree [Head %d pieces]:", treeDepth));
+        // output(tree.tree(treeDepth));
 
-        output("-------------------");
+        // output("-------------------");
 
-        int failedMaxCount = settings.getFailedCount();
+        // int failedMaxCount = settings.getFailedCount();
         // skip if failedMaxCount == 0
-        if (0 < failedMaxCount) {
-            output(String.format("Fail pattern (max. %d)", failedMaxCount));
+        // if (0 < failedMaxCount) {
+        //     output(String.format("Fail pattern (max. %d)", failedMaxCount));
 
-            List<Pair<Pieces, Boolean>> failedPairs = resultPairs.stream()
-                    .filter(pair -> !pair.getValue())
-                    .limit(failedMaxCount)
-                    .collect(Collectors.toList());
+        //     List<Pair<Pieces, Boolean>> failedPairs = resultPairs.stream()
+        //             .filter(pair -> !pair.getValue())
+        //             .limit(failedMaxCount)
+        //             .collect(Collectors.toList());
 
-            outputFailedPatterns(failedPairs);
-        } else if (failedMaxCount < 0) {
-            output("Fail pattern (all)");
+        //     outputFailedPatterns(failedPairs);
+        // } else if (failedMaxCount < 0) {
+        //     output("Fail pattern (all)");
 
-            List<Pair<Pieces, Boolean>> failedPairs = resultPairs.stream()
-                    .filter(pair -> !pair.getValue())
-                    .collect(Collectors.toList());
+        //     List<Pair<Pieces, Boolean>> failedPairs = resultPairs.stream()
+        //             .filter(pair -> !pair.getValue())
+        //             .collect(Collectors.toList());
 
-            outputFailedPatterns(failedPairs);
-        }
+        //     outputFailedPatterns(failedPairs);
+        // }
 
-        output();
+        // output();
 
         // ========================================
 
-        output("# Finalize");
-        if (executorService != null)
-            executorService.shutdown();
+        // output("# Finalize");
+        // if (executorService != null)
+        //     executorService.shutdown();
 
-        output("done");
+        // output("done");
     }
 
     private ExecutorService createExecutorService() throws FinderExecuteException {
         int threadCount = settings.getThreadCount();
         if (threadCount == 1) {
             // single thread
-            output("Threads = 1");
+            // output("Threads = 1");
             return null;
         } else if (1 < threadCount) {
             // Specified thread count
-            output("Threads = " + threadCount);
+            // output("Threads = " + threadCount);
             return Executors.newFixedThreadPool(threadCount);
         } else {
             // NOT specified thread count
             int core = Runtime.getRuntime().availableProcessors();
-            output("Threads = " + core);
+            // output("Threads = " + core);
             return Executors.newFixedThreadPool(core);
         }
     }

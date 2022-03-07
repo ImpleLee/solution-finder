@@ -87,9 +87,11 @@ public class EntryPointMain {
             return 1;
         }
 
+        int ret;
+
         // メイン処理を実行する
         try {
-            entryPoint.run();
+            ret = entryPoint.run();
         } catch (Exception e) {
             System.err.println("Error: Failed to execute main. Output stack trace to output/error.txt");
             System.err.println("Message: " + e.getMessage());
@@ -106,7 +108,7 @@ public class EntryPointMain {
                 outputError(Arrays.asList(e, e2), args);
             }
 
-            return 1;
+            return -1;
         }
 
         // 終了処理をする（メイン処理成功後）
@@ -117,10 +119,10 @@ public class EntryPointMain {
             System.err.println("Message: " + e.getMessage());
             e.printStackTrace();
             outputError(e, args);
-            return 1;
+            return -1;
         }
 
-        return 0;
+        return ret;
     }
 
     private static void outputError(Exception exception, String[] commands) {

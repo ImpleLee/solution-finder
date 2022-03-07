@@ -88,7 +88,7 @@ public class SetupEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         output("# Setup Field");
 
         // Setup init field
@@ -329,6 +329,7 @@ public class SetupEntryPoint implements EntryPoint {
 
         output("# Finalize");
         output("done");
+        return 0;
     }
 
     private SetupOutput createOutput(OutputType outputType, MinoFactory minoFactory, ColorConverter colorConverter, ThreadLocal<BuildUpStream> buildUpStreamThreadLocal, FumenParser fumenParser, SetupFunctions setupFunctions) throws FinderInitializeException, FinderExecuteException {

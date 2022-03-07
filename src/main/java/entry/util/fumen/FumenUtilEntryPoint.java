@@ -54,7 +54,7 @@ public class FumenUtilEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         FumenUtilModes mode = settings.getFumenUtilModes();
         switch (mode) {
             case Reduce: {
@@ -131,6 +131,7 @@ public class FumenUtilEntryPoint implements EntryPoint {
             default:
                 throw new FinderExecuteException("Unknown mode: " + mode);
         }
+        return 0;
     }
 
     private Field toField(ColoredField coloredField, int height) {

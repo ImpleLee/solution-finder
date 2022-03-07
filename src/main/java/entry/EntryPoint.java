@@ -5,7 +5,7 @@ import exceptions.FinderTerminateException;
 import exceptions.FinderExecuteException;
 
 public interface EntryPoint {
-    void run() throws FinderException;
+    int run() throws FinderException;
 
     void close() throws FinderTerminateException;
 }

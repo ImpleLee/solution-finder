@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
  * 同じミノを入れたとき親の要素は複数回分追加される
  */
 public class AnalyzeTree {
-    private static class Element {
+    public static class Element {
         private final EnumMap<Piece, Element> current = new EnumMap<>(Piece.class);
         private int allCounter = 0;
-        private int successCounter = 0;
+        public int successCounter = 0;
 
         private void success(List<Piece> pieces) {
             allCounter += 1;
@@ -60,7 +60,7 @@ public class AnalyzeTree {
         }
     }
 
-    private final Element rootElement = new Element();
+    public final Element rootElement = new Element();
 
     public void success(List<Piece> pieces) {
         rootElement.success(pieces);

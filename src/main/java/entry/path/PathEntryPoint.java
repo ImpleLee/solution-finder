@@ -67,7 +67,7 @@ public class PathEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         output("# Setup Field");
 
         // Setup field
@@ -212,6 +212,7 @@ public class PathEntryPoint implements EntryPoint {
 
         output("# Finalize");
         output("done");
+        return 0;
     }
 
     private ValidPiecesPool createValidPiecesPool(int maxDepth, List<String> patterns, boolean isUsingHold) throws FinderInitializeException, FinderExecuteException {

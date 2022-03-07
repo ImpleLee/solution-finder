@@ -34,7 +34,7 @@ public class SeqUtilEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         int length = settings.getLength();
         PieceTransformer limit = 0 < length ? new UsePieceLength(length) : new NoPieceTransformer();
 
@@ -153,6 +153,7 @@ public class SeqUtilEntryPoint implements EntryPoint {
                 throw new UnsupportedOperationException("Unsupported mode: mode = " + mode);
             }
         }
+        return 0;
     }
 
     private Predicate<PieceCounter> createPieceCounterPredicate(List<PieceEquation> pieceEquations) {

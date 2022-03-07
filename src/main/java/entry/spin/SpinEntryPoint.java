@@ -80,7 +80,7 @@ public class SpinEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         output("# Setup Field");
 
         // Setup field
@@ -181,6 +181,7 @@ public class SpinEntryPoint implements EntryPoint {
 
         int resultSize = output.output(base, results, initField, fieldHeight);
         output("Found solutions = " + resultSize);
+        return 0;
     }
 
     private void verifyTarget() throws FinderInitializeException {

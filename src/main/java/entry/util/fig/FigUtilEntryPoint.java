@@ -68,7 +68,7 @@ public class FigUtilEntryPoint implements EntryPoint {
     }
 
     @Override
-    public void run() throws FinderException {
+    public int run() throws FinderException {
         output("# Setup");
         output("Version = " + FinderConstant.VERSION);
 
@@ -91,6 +91,7 @@ public class FigUtilEntryPoint implements EntryPoint {
 
         stopwatch.stop();
         output("  -> Stopwatch stop : " + stopwatch.toMessage(TimeUnit.MILLISECONDS));
+        return 0;
     }
 
     private void generate(FigWriter figWriter, List<TetfuPage> usingTetfuPages) throws FinderException {
